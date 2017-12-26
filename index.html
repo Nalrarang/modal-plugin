@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+    <title>Modal Test</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+</head>
+<body>
+    <button type="button" class="btn">Modal</button>
+    <button type="button" class="btn2">Modal</button>
+    <button type="button" class="btn3">Modal</button>
+
+</body>
+<script src="./node_modules/jquery/dist/jquery.min.js"></script>
+<script>
+    (function ($) {
+        $.fn.customModal = function(options) {
+            var modal = $(this);
+            var modalOptions = $.extend({
+                position: 'center',
+                width: '800',
+                height: '600',
+                multiple: true,
+                template: '',
+                onInit: function() {},
+                onBeforeShow: function() {},
+                onAfterHide: function() {},
+                show: function() {},
+                hide: function() {}
+            }, options);
+
+            var _windowWidth = $(window).innerWidth;
+            var _windowHeight = $(window).innerHeight;
+
+            var left = (_windowWidth - modalOptions.width) / 2;
+            var top = (_windowHeight - modalOptions.height) / 2;
+
+
+            var isBgClick = $(modal).attr('data-modal-bgclick');
+
+
+            var styles = {
+                'position': 'fixed',
+                'width': modalOptions.width,
+                'height': modalOptions.height,
+                'left': left,
+                'top': top,
+                'display': 'none'
+            }
+            var modalTemplate = '<div class="cs-modal" style="'+ styles +'">' + template + '</div>';
+            
+
+
+            modal.on('click', function(evt) {
+                evt.preventDefault();
+                modalOptions.onBeforeShow();
+                $('body, html').css({'overflow': 'hidden'});
+                $('body').append(modalTemplate);
+                modalOptions.onAfterHide();
+            });
+
+            var methods = {
+                show : function() {
+                    console.log('show');
+                },
+                hide : function() {
+                    console.log('hide');
+                },
+                destroy : function() {
+                    console.log('destroy');
+                }
+            }
+        }
+    }(jQuery));
+
+</script>
+
+
+</html>
