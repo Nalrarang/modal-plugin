@@ -16,10 +16,20 @@
     (function ($) {
         $.fn.customModal = function(options) {
             var modal = $(this);
+            var body = $('body');
+
+            if(options == 'hide') {
+                alert('hide')
+                return false;
+            }
+
             var modalOptions = $.extend({
+                id: 'modalContent',
                 position: 'center',
                 width: '800',
                 height: '600',
+                left: '0',
+                top: '0',
                 multiple: true,
                 template: '',
                 onInit: function() {},
@@ -29,37 +39,60 @@
                 hide: function() {}
             }, options);
 
-            var _windowWidth = $(window).innerWidth;
-            var _windowHeight = $(window).innerHeight;
+            var _windowWidth = window.innerWidth;
+            var _windowHeight = window.innerHeight;
 
-            var left = (_windowWidth - modalOptions.width) / 2;
-            var top = (_windowHeight - modalOptions.height) / 2;
+            var left = (_windowWidth - parseInt(modalOptions.width)) / 2;
+            var top = (_windowHeight - parseInt(modalOptions.height)) / 2;
 
 
             var isBgClick = $(modal).attr('data-modal-bgclick');
 
-
             var styles = {
-                'position': 'fixed',
+                'position': 'absolute',
                 'width': modalOptions.width,
                 'height': modalOptions.height,
                 'left': left,
-                'top': top,
-                'display': 'none'
+                'top': top,                
+                'background': 'white'                
             }
-            var modalTemplate = '<div class="cs-modal" style="'+ styles +'">' + template + '</div>';
+            var modalTemplate = '<div id="'+ modalOptions.id +'" class="modal"><div class="cs-modal">' + modalOptions.template + '</div></div>';
+            body.append(modalTemplate);
+            $('.modal').css({
+                width: '100%',
+                height: '100%',
+                left: 0,
+                top: 0,
+                background: 'rgba(0,0,0,0.4)',
+                position: 'fixed',
+                display: 'none'
+            })
+            var modalContent = $('.cs-modal');
+            modalContent.css(styles);
             
+            var onBeforeShow = function() {
+                var events = $._data($('#modalContent')[0], 'events');
+                if(events && events['onBeforeShow']) {
+                    events.onBeforeShow[events['onBeforeShow'].length-1].handler();
+                } else {
+                    modalOptions.onBeforeShow();                
+                }
+                $('.modal').show();
+            }
 
+            var onAftershow = function() {
+                 console.log('b');
+            }
 
             modal.on('click', function(evt) {
                 evt.preventDefault();
-                modalOptions.onBeforeShow();
-                $('body, html').css({'overflow': 'hidden'});
-                $('body').append(modalTemplate);
-                modalOptions.onAfterHide();
+                onBeforeShow();
             });
 
             var methods = {
+                init: function() {
+
+                },
                 show : function() {
                     console.log('show');
                 },
@@ -70,10 +103,14 @@
                     console.log('destroy');
                 }
             }
+
+            if(methods[options]) {
+                methods[options];
+            }
         }
     }(jQuery));
 
 </script>
 
 
-</html>
+</html> 
