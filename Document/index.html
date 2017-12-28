@@ -81,6 +81,17 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="example-box">
+                    <div class="example-demo">
+                        <a href="#" class="button basic-modal-open">기본 모달 열기</a>
+                        <a href="#" class="button basic-modal-close">기본 모달 닫기</a>
+                    </div>
+                    <div class="example-meta">
+                        <div class="example-title">Function, Events</div>
+                        <div class="example-desc">외부 함수에서 모달을 오픈하거나 닫을 수 있고, 해달 모달의 Callback 이벤트를 재정의 할 수있습니다.</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -226,10 +237,14 @@
 <script>
     $(document).ready(function(){
         /* 기본 모달 Init */
-        $('#basic-button').customModal();
+        $('#basic-button').customModal({
+            id: 'basicModal'
+        });
 
         /* 오버레이 모달 Init */
-        $('#overlay-modal-button').customModal({});
+        $('#overlay-modal-button').customModal({
+            id: 'overlayModal'
+        });
 
         /* CustomModal을 위한 Sample Template 입니다. Sample이라 조금 대충 만들었습니다.. */
         var customTemplate = '';
@@ -290,6 +305,15 @@
                 });              
             }
         });
+
+        /* Function, Events */
+        $('.basic-modal-open').on('click', function(){
+            $('#basicModal').customModal('show');
+        })
+        $('.basic-modal-close').on('click', function () {
+            $('#basicModal').customModal('hide');
+        })
+
     });
 
     
